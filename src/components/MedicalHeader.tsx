@@ -18,14 +18,10 @@ export const MedicalHeader: React.FC = () => {
           </div>
           
           <div className="flex items-center space-x-3">
-            <div className="hidden md:flex items-center space-x-2 text-xs">
+            <div className="flex items-center space-x-2 text-xs">
               <Shield className="h-4 w-4 text-success" />
               <span className="text-muted-foreground">HIPAA Compliant</span>
             </div>
-            <Button variant="outline" size="sm">
-              <User className="h-4 w-4 mr-2" />
-              Sign In
-            </Button>
           </div>
         </div>
       </div>
