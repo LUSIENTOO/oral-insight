@@ -1,78 +1,90 @@
 import { pipeline } from '@huggingface/transformers';
 import { DiagnosisData } from '@/components/DiagnosisResult';
 
-// Simulated oral disease database
+// Oral disease database based on Kaggle dataset categories
 const oralDiseases = {
   'caries': {
     name: 'Dental Caries (Tooth Decay)',
-    description: 'Bacterial infection that causes demineralization and destruction of tooth structures. Commonly caused by poor oral hygiene and bacterial plaque buildup.',
+    description: 'Bacterial infection causing demineralization and destruction of tooth structures. Characterized by cavities and carious lesions visible as dark spots or holes in teeth.',
     severity: 'medium' as const,
     recommendations: [
-      'Schedule immediate dental cleaning and examination',
-      'Improve daily brushing and flossing routine',
-      'Consider fluoride treatment or dental fillings',
-      'Reduce sugar intake and acidic foods',
-      'Use antimicrobial mouthwash'
+      'Schedule immediate dental restoration (fillings)',
+      'Professional fluoride treatment',
+      'Improve daily oral hygiene routine',
+      'Reduce sugar and acidic food intake',
+      'Consider antimicrobial mouth rinse'
+    ]
+  },
+  'calculus': {
+    name: 'Dental Calculus (Tartar)',
+    description: 'Hardened dental plaque that has mineralized on teeth surfaces. Appears as yellow-brown deposits along the gum line and between teeth.',
+    severity: 'medium' as const,
+    recommendations: [
+      'Professional dental scaling and cleaning',
+      'Ultrasonic tartar removal',
+      'Improve brushing technique and frequency',
+      'Use tartar control toothpaste',
+      'Regular dental cleanings every 6 months'
     ]
   },
   'gingivitis': {
     name: 'Gingivitis',
-    description: 'Inflammation of the gums caused by bacterial plaque buildup. Early stage of gum disease that can be reversed with proper oral care.',
+    description: 'Inflammation of the gums caused by bacterial plaque buildup. Gums appear red, swollen, and may bleed during brushing or flossing.',
     severity: 'low' as const,
     recommendations: [
       'Improve daily oral hygiene routine',
-      'Schedule professional dental cleaning',
+      'Professional dental cleaning',
       'Use antibacterial mouthwash',
-      'Consider soft-bristled toothbrush',
-      'Regular dental check-ups every 6 months'
+      'Gentle brushing with soft-bristled toothbrush',
+      'Regular flossing to remove plaque'
     ]
   },
-  'periodontitis': {
-    name: 'Periodontitis',
-    description: 'Advanced gum disease affecting the tissues and bones supporting teeth. Can lead to tooth loss if untreated.',
-    severity: 'high' as const,
-    recommendations: [
-      'Urgent consultation with periodontist required',
-      'Deep cleaning (scaling and root planing) needed',
-      'Possible antibiotic treatment',
-      'Surgical intervention may be necessary',
-      'Strict oral hygiene maintenance program'
-    ]
-  },
-  'oral_ulcer': {
-    name: 'Oral Ulcer',
-    description: 'Painful sores in the mouth that can be caused by various factors including stress, minor injuries, or underlying conditions.',
+  'tooth_discoloration': {
+    name: 'Tooth Discoloration',
+    description: 'Abnormal staining or discoloration of teeth that can be caused by various factors including diet, medications, or dental conditions.',
     severity: 'low' as const,
     recommendations: [
-      'Apply topical pain relief gel',
-      'Avoid spicy and acidic foods',
-      'Maintain good oral hygiene',
-      'Consider stress management techniques',
+      'Professional dental cleaning',
+      'Evaluate cause of discoloration',
+      'Consider professional whitening treatment',
+      'Limit staining foods and beverages',
+      'Maintain excellent oral hygiene'
+    ]
+  },
+  'ulcers': {
+    name: 'Oral Ulcers',
+    description: 'Painful sores or lesions in the mouth that can be caused by trauma, stress, nutritional deficiencies, or underlying conditions.',
+    severity: 'medium' as const,
+    recommendations: [
+      'Apply topical pain relief medication',
+      'Avoid spicy, acidic, or rough foods',
+      'Maintain gentle oral hygiene',
+      'Consider stress management if stress-related',
       'Consult dentist if ulcers persist beyond 2 weeks'
     ]
   },
-  'oral_cancer': {
-    name: 'Suspicious Oral Lesion',
-    description: 'Abnormal tissue growth that requires immediate professional evaluation to rule out malignancy.',
-    severity: 'high' as const,
+  'hypodontia': {
+    name: 'Hypodontia (Missing Teeth)',
+    description: 'Congenital condition characterized by the absence of one or more teeth. Can affect both primary and permanent dentition.',
+    severity: 'medium' as const,
     recommendations: [
-      'URGENT: Schedule immediate appointment with oral surgeon',
-      'Biopsy may be required for definitive diagnosis',
-      'Avoid tobacco and alcohol consumption',
-      'Document any changes in size or appearance',
-      'Seek second opinion from oncology specialist'
+      'Consult orthodontist for treatment planning',
+      'Consider dental implants or bridges',
+      'Evaluate need for orthodontic treatment',
+      'Monitor remaining teeth for proper alignment',
+      'Discuss prosthetic replacement options'
     ]
   },
   'healthy': {
     name: 'Healthy Oral Tissue',
-    description: 'Normal, healthy oral structures with no signs of disease or abnormalities detected.',
+    description: 'Normal, healthy oral structures with no signs of disease or abnormalities detected. Gums appear pink and firm, teeth are clean and intact.',
     severity: 'low' as const,
     recommendations: [
       'Maintain excellent oral hygiene routine',
-      'Continue regular dental check-ups',
+      'Continue regular dental check-ups every 6 months',
       'Brush twice daily with fluoride toothpaste',
-      'Floss daily and use mouthwash',
-      'Maintain healthy diet low in sugar'
+      'Daily flossing and mouthwash use',
+      'Maintain balanced diet low in sugar'
     ]
   }
 };
